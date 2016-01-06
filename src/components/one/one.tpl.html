@@ -1,0 +1,8 @@
+<button
+	ng-class="oneBtn.styles.button"
+	ng-click="oneBtn.newButton()">
+	{{ oneBtn.buttons.get()[0].title || 'untitled' }}
+</button>
+<p>
+	buttons: {{ oneBtn.buttons.get() }}
+</p>
