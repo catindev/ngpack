@@ -1,24 +1,19 @@
 //	vendors
 import './common/mimic.css';
 import angular from 'angular';
+import router from 'angular-route';
 import 'angular-component';
 
-// components
-import one from './components/one';
-import two from './components/two';
-import stateTree from './components/state/tree';
+// pages
+import home from 'components/home';
+
+//	common
+import routerConfig from 'common/routes.config';
 
 angular
-	.module('app', [])
-	.directive('twoBtn', two)
-	.component('oneBtn', one)
-	.run(() => {
-		stateTree.on('update', function () {
-			console.log(stateTree.getHistory());
-		});
-	});
+	.module('app', [ router, home ])
+	.config(routerConfig);
 
-document.addEventListener('DOMContentLoaded', () => {
-	if(NODE_ENV === 'development')	console.info('bootstraping app...');
-	angular.bootstrap(document, [ 'app' ]);
-});
+const bootstrap = () => angular.bootstrap(document, [ 'app' ]);
+
+document.addEventListener('DOMContentLoaded', bootstrap);

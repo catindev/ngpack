@@ -1,6 +1,6 @@
-import { inject } from 'state';
-import styles from './one.css';
+import { inject, tree } from 'state';
 import { addButton } from './actions';
+import styles from './one.styles';
 
 class Controller {
     constructor() {
@@ -12,7 +12,9 @@ class Controller {
             title: new Date().getTime()
         });
     }
-
+    onTextValue(txtvalue){
+        console.warn(txtvalue);
+    }
 }
 
 export default Controller;

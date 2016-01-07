@@ -3,14 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Webpack & Angular</title>
+  <base href="/">
 </head>
 <body class="ng-cloak" class="font-size:12px">
-	<p>{{ 'hello world!' }}</p>
-	<div>
-		<one-btn title="one btn"></one-btn>
-	</div>
-	<div>
-		<two-btn title="two btn"></two-btn>
-	</div>
+	<p class="font-weight:bold">{{ 'hello world!' }}</p>
+    <ng-view></ng-view>
 </body>
 </html>
