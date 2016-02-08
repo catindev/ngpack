@@ -1,6 +1,6 @@
 import { inject, tree } from 'state';
 import { addButton } from './actions';
-import styles from './one.styles';
+import styles from './one.less';
 
 class Controller {
     constructor() {

@@ -1,5 +1,5 @@
 //	vendors
-import './common/mimic.css';
+//import './common/mimic.css';
 import angular from 'angular';
 import router from 'angular-route';
 import 'angular-component';
@@ -11,7 +11,7 @@ import home from 'components/home';
 import routerConfig from 'common/routes.config';
 
 angular
-	.module('app', [ router, home ])
+	.module('app', [ 'mgcrea.ngStrap', router, home ])
 	.config(routerConfig);
 
 const bootstrap = () => angular.bootstrap(document, [ 'app' ]);
