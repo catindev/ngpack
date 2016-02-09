@@ -1,9 +1,17 @@
-import angular from 'angular';
+// pages
+import home from 'components/home';
+
+//	common
+import routerConfig from 'common/routes.config';
 
 angular
-	.module( 'app', [] );
+	.module('app', [
+		'ngMaterial',
+		'ngSanitize',
+		'ngRoute',
+		 home
+	).config(routerConfig);
 
-document.addEventListener( 'DOMContentLoaded', () => {
-	if(NODE_ENV === 'development') console.info('starting app');
-	angular.bootstrap(document, ['app']);
-});	
+const bootstrap = () => angular.bootstrap(document, [ 'app' ]);
+
+document.addEventListener('DOMContentLoaded', bootstrap);

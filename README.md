@@ -1,6 +1,6 @@
 # Workflow starter kit
 
-### AngularJS + WebPack + es6 + LESS
+### AngularJS + WebPack + CSS-modules + ES2015 + Baobab
 
 How to start:
 * Install Node.JS & NPM from https://nodejs.org/;

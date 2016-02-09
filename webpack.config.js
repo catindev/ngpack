@@ -2,51 +2,71 @@
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-var path = require('path'),
+const path = require('path'),
 	webpack = require('webpack'),
 	HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var APP = __dirname + '/src';
+let APP = __dirname + '/src';
 
 module.exports = {
-    entry: {
-    	app: ['webpack/hot/dev-server', APP + '/index.js']
-    },
-    output: {
-        path: __dirname + '/build',
-        filename: NODE_ENV === 'development' ? '[name].bundle.js' : '[name].[hash].js'
-    },
 
-    watch: NODE_ENV === 'development',
+	cache: true,
+
+	entry: {
+    app: null,
+    vendor: [
+			'angular',
+			'baobab',
+			'angular-route',
+			'angular-animate',
+			'angular-sanitize',
+			'angular-material',
+		],
+  },
+
+  output: {
+      path: __dirname + '/build',
+      filename: NODE_ENV === 'development' ? '[name].bundle.js' : '[name].[hash].js'
+  },
+
+	resolve: {
+    root: path.resolve(APP)
+	},
+
+  watch: NODE_ENV === 'development',
 	watchOptions: {
 		aggregateTimeout: 100
 	},
 
 	module: {
-        preLoaders: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: "jshint-loader"
-            }
-        ],		
+      preLoaders: [],
 	    loaders: [
 		    {
 		      test: /\.js$/,
-		      loader: 'babel?presets[]=es2015&cacheDirectory=true',
+		      loader: 'babel?presets[]=es2015',
 		      exclude: /node_modules/
-		    }, 
+		    },
 		    {
-		      test: /\.less$/, loader: "style!css!less" 
-		    }, 
-		    {
-		      test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-		      loader: 'file'
-		    }, 
-		    {
-		      test: /\.html$/,
-		      loader: 'raw'
-		    }
+					test: /\.less$/,
+					loader: "style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!less",
+				},
+				{
+					test: /\.css$/,
+					loader: "style!css",
+				},
+				{
+						test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+						loader: 'url-loader?name=assets/[hash][name].[ext]&limit=10000&mimetype=application/font-woff'
+				},
+				{
+						test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+						loader: 'file-loader?name=assets/[hash][name].[ext]'
+				},
+				{
+						test: /\.jpg|\.png|\.mp3/,
+						loader: 'file-loader?name=assets/[hash][name].[ext]'
+				},
+		    { test: /\.html$/, loader: 'raw' }
 	    ]
 	},
 
@@ -61,9 +81,8 @@ module.exports = {
 		})
 	],
 
-	devtool: NODE_ENV === 'development' ?
-		'cheap-inline-module-source-map' : null
-}
+	devtool: NODE_ENV === 'development' ? 'cheap-inline-module-source-map' : null
+};
 
 if (NODE_ENV === 'production') {
 	module.exports.plugins.push(
@@ -75,4 +94,13 @@ if (NODE_ENV === 'production') {
 			}
 		})
 	);
+  module.exports.entry.app = APP + '/index.js';
+} else {
+
+  module.exports.entry.app = [
+    'webpack/hot/dev-server',
+    'webpack-dev-server/client?http://localhost:8080',
+    APP + '/index.js'
+  ];
+
 }
