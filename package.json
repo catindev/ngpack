@@ -44,4 +44,5 @@
     "babel-eslint": "^5.0.0-beta6",
     "babel-preset-stage-0": "^6.3.13",
     "baobab": "^2.2.1"
+  }
 }
