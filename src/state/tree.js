@@ -1,11 +1,6 @@
 import Baobab from 'baobab';
 import initial from './initial';
 
-const config = {
-	maxHistory: 10,
-	validate: logger
-};
-
 function logger(previousState, newState, affectedPaths) {
 	if (NODE_ENV === 'development') {
 		console.groupCollapsed('State history:');
@@ -16,6 +11,11 @@ function logger(previousState, newState, affectedPaths) {
 	}
 }
 
-const tree = new Baobab( initial, config );
+const config = {
+	maxHistory: 10,
+	validate: logger
+};
+
+const tree = new Baobab(initial, config);
 
 export default tree;
