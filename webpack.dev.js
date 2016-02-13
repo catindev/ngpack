@@ -1,6 +1,6 @@
 'use strict';
 
-/* PRODUCTION BUILD */
+/* DEVELOPMENT WOKFLOW */
 
 const
 	path = require('path'),
@@ -15,8 +15,12 @@ module.exports = {
 	cache: true,
 
 	entry: {
-    app: [ APP + '/index.js'],
-    vendors: [
+    app:  [
+	    'webpack/hot/dev-server',
+	    'webpack-dev-server/client?http://localhost:8081',
+	    APP + '/index.js'
+	  ],
+		vendors: [
 			'angular/angular.js',
 			'baobab',
 			'livr',
@@ -28,22 +32,26 @@ module.exports = {
   },
 
   output: {
-    path: __dirname + '/public',
-    filename: '[name].[hash].js'
+      path: __dirname + '/public',
+      filename: '[name].[hash].js'
   },
 
 	resolve: {
     root: path.resolve(APP)
 	},
 
-  watch: false,
+  watch: true,
+	watchOptions: {
+		aggregateTimeout: 100
+	},
 
 	module: {
-      preLoaders: [],
+      preLoaders: [{test: /\.js$/, loader: 'eslint', include: path.resolve('src')}],
 	    loaders: [
 		    {
 		      test: /\.js$/,
 		      loader: 'babel?presets[]=es2015',
+					//include: APP,
 		      exclude: /node_modules/
 		    },
 		    {
@@ -73,36 +81,27 @@ module.exports = {
 					test: /\.html$/,
 					loader: 'raw'
 				},
-	    ]
+	    ],
 	},
 
 	plugins: [
 		new webpack.NoErrorsPlugin(),
-		new webpack.HotModuleReplacementPlugin(),
-		new webpack.ProvidePlugin({
-			'angular' : 'angular',
-		}),
 		new webpack.DefinePlugin({
 			NODE_ENV: JSON.stringify(NODE_ENV)
 		}),
 		new HtmlWebpackPlugin({
 			template: APP + '/index.html',
-			inject: 'body',
+			inject: 'body'
 		}),
 		new webpack.optimize.CommonsChunkPlugin(
 			'vendors', 'vendors.[hash].js'
 		),
-		new ExtractTextPlugin('common.[hash].css', { allChunks: true }),
-		new webpack.optimize.UglifyJsPlugin({
-			sourceMap: false,
-			mangle: false,
-			compress: {
-				warnings: false,
-				drop_console: true,
-				unsafe: false
-			},
-		}),
+		new ExtractTextPlugin('common.[hash].css', { allChunks: true })
 	],
 
-	devtool: null
+	devtool: 'cheap-inline-module-source-map',
+
+	eslint: {
+		configFile: './src/.eslintrc'
+	},
 };

@@ -1,17 +1,21 @@
 import Baobab from 'baobab';
-const config = { maxHistory: 10, validate: validation };
-const initialState = { buttons: [] };
+import initial from './initial';
 
-function validation(previousState, newState, affectedPaths) {
-	console.groupCollapsed('validator info');
-	console.log('previousState', previousState);
-	console.log('newState',newState);
-	console.log('affectedPaths', affectedPaths);
-	console.groupEnd();
-	//if (!valid) return new Error('Invalid tree because of reasons.');
+const config = {
+	maxHistory: 10,
+	validate: logger
+};
+
+function logger(previousState, newState, affectedPaths) {
+	if (NODE_ENV === 'development') {
+		console.groupCollapsed('State history:');
+		console.log('Previous', previousState);
+		console.log('Now', newState);
+		console.log('Affected', affectedPaths);
+		console.groupEnd();
+	}
 }
 
-const tree = new Baobab(initialState, config);
-
+const tree = new Baobab( initial, config );
 
 export default tree;

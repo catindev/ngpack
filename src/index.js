@@ -1,19 +1,22 @@
-//	vendors
-//import './common/mimic.css';
 import angular from 'angular';
 import router from 'angular-route';
-import 'angular-component';
 
-// pages
-import home from 'components/home';
+import 'common/common.css';
+import login from 'components/login';
 
-//	common
-import routerConfig from 'common/routes.config';
+angular.module('app', [
+  router,
+  login
+]).config([
+  '$routeProvider', '$locationProvider',
+  function ($routeProvider, $locationProvider) {
+    $locationProvider.html5Mode(true);
+    $routeProvider
+        .when('/', {template: '<login-page></login-page>'})
+        .otherwise({redirectTo: '/'});
+  }
+]);
 
-angular
-	.module('app', [ 'mgcrea.ngStrap', router, home ])
-	.config(routerConfig);
-
-const bootstrap = () => angular.bootstrap(document, [ 'app' ]);
+const bootstrap = () => angular.bootstrap(document, ['app']);
 
 document.addEventListener('DOMContentLoaded', bootstrap);
