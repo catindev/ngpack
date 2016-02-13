@@ -1,42 +1,42 @@
 'use strict';
 
-/* PRODUCTION BUILD */
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
-const
-	path = require('path'),
-	NODE_ENV = 'production',
+const path = require('path'),
 	webpack = require('webpack'),
-	HtmlWebpackPlugin = require('html-webpack-plugin'),
-	ExtractTextPlugin = require('extract-text-webpack-plugin'),
-	APP = __dirname + '/src';
+	HtmlWebpackPlugin = require('html-webpack-plugin');
+
+let APP = __dirname + '/src';
 
 module.exports = {
 
 	cache: true,
 
 	entry: {
-    app: [ APP + '/index.js'],
-    vendors: [
-			'angular/angular.js',
+    app: null,
+    vendor: [
+			'angular',
 			'baobab',
-			'livr',
 			'angular-route',
 			'angular-animate',
 			'angular-sanitize',
-			'superagent',
+			'angular-material',
 		],
   },
 
   output: {
-    path: __dirname + '/public',
-    filename: '[name].[hash].js'
+      path: __dirname + '/build',
+      filename: NODE_ENV === 'development' ? '[name].bundle.js' : '[name].[hash].js'
   },
 
 	resolve: {
     root: path.resolve(APP)
 	},
 
-  watch: false,
+  watch: NODE_ENV === 'development',
+	watchOptions: {
+		aggregateTimeout: 100
+	},
 
 	module: {
       preLoaders: [],
@@ -48,18 +48,15 @@ module.exports = {
 		    },
 		    {
 					test: /\.less$/,
-					loader: 'style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!less'
+					loader: "style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!less",
 				},
 				{
 					test: /\.css$/,
-					loader: ExtractTextPlugin.extract(
-						'style-loader',
-						'css'
-					)
+					loader: "style!css",
 				},
 				{
-					test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-					loader: 'url-loader?name=assets/[hash][name].[ext]&limit=10000&mimetype=application/font-woff'
+						test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+						loader: 'url-loader?name=assets/[hash][name].[ext]&limit=10000&mimetype=application/font-woff'
 				},
 				{
 						test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -69,40 +66,41 @@ module.exports = {
 						test: /\.jpg|\.png|\.mp3/,
 						loader: 'file-loader?name=assets/[hash][name].[ext]'
 				},
-		    {
-					test: /\.html$/,
-					loader: 'raw'
-				},
+		    { test: /\.html$/, loader: 'raw' }
 	    ]
 	},
 
 	plugins: [
 		new webpack.NoErrorsPlugin(),
-		new webpack.HotModuleReplacementPlugin(),
-		new webpack.ProvidePlugin({
-			'angular' : 'angular',
+		new HtmlWebpackPlugin({
+			template: APP + '/index.html',
+			inject: 'body'
 		}),
 		new webpack.DefinePlugin({
 			NODE_ENV: JSON.stringify(NODE_ENV)
-		}),
-		new HtmlWebpackPlugin({
-			template: APP + '/index.html',
-			inject: 'body',
-		}),
-		new webpack.optimize.CommonsChunkPlugin(
-			'vendors', 'vendors.[hash].js'
-		),
-		new ExtractTextPlugin('common.[hash].css', { allChunks: true }),
+		})
+	],
+
+	devtool: NODE_ENV === 'development' ? 'cheap-inline-module-source-map' : null
+};
+
+if (NODE_ENV === 'production') {
+	module.exports.plugins.push(
 		new webpack.optimize.UglifyJsPlugin({
-			sourceMap: false,
-			mangle: false,
 			compress: {
 				warnings: false,
 				drop_console: true,
-				unsafe: false
-			},
-		}),
-	],
+				unsafe: true
+			}
+		})
+	);
+  module.exports.entry.app = APP + '/index.js';
+} else {
 
-	devtool: null
-};
+  module.exports.entry.app = [
+    'webpack/hot/dev-server',
+    'webpack-dev-server/client?http://localhost:8080',
+    APP + '/index.js'
+  ];
+
+}

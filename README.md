@@ -4,6 +4,7 @@
 
 How to start:
 * Install Node.JS & NPM from https://nodejs.org/;
+* Install Webpack and Webpack-dev-server `npm i -g webpack webpack-dev-server`;
 * Clone this repo;
 * Install dependencies `npm i`;
-* Create new components in the `src/components` folder and connect them to `src/index.js`;
+* Create new components in the `src/components` folder;

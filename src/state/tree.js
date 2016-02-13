@@ -1,21 +1,19 @@
 import Baobab from 'baobab';
-import initial from './initial';
 
 const config = {
 	maxHistory: 10,
-	validate: logger
+	validate: validation
 };
+const initialState = { buttons: [] };
 
-function logger(previousState, newState, affectedPaths) {
-	if (NODE_ENV === 'development') {
-		console.groupCollapsed('State history:');
-		console.log('Previous', previousState);
-		console.log('Now', newState);
-		console.log('Affected', affectedPaths);
-		console.groupEnd();
-	}
+function validation(previousState, newState, affectedPaths) {
+	console.groupCollapsed('validator:');
+	console.log('previous state', previousState);
+	console.log('new state', newState);
+	console.log('affected paths', affectedPaths);
+	console.groupEnd();
 }
 
-const tree = new Baobab( initial, config );
+const tree = new Baobab(initialState, config);
 
 export default tree;
